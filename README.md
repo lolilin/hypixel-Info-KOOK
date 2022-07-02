@@ -5,6 +5,7 @@
 - 注意事项
 
  1. 以下为所需拓展的安装代码
+    
     `pip install mcuuid`
 
     `pip install requests`
