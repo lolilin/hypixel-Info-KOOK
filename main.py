@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 '''
 .__         .__  .__.__  .__        
 |  |   ____ |  | |__|  | |__| ____  
@@ -12,6 +13,7 @@ github project: https://github.com/lolilin/hypixel-Info-KOOK
 
 ##加载普通拓展( •̀ ω •́ )✧
 
+from ensurepip import version
 from sqlite3 import Timestamp
 import time
 from gevent import config
@@ -48,47 +50,16 @@ def hyplv(xp):
     return (divides*xp+const)**0.5+prefix+1
 
 
+    
+
+
 ##变量设置φ(゜▽゜*)♪
+version = 'Alpha 22a27a'
 
-
-
-##关于
-@bot.command(name = 'hyp-about')
-async def about(msg: Message):
-    cm = CardMessage
-    c1 = Card(Module.Header('About hypixel Info Bot'), theme=Types.Theme.NONE)
-    c1.append(Module.Section('hypixel Info Bot'))
-    c1.append(Module.Section('github: https://github.com/lolilin/hypixel-Info-KOOK' ))
-    cm.append(c1)
-
-    c2 = Card(theme=Types.Theme.NONE) 
-    c2.append(Module.Context('Powered by lolilin(白澪)'))
-    cm.append(c2)  
-    await msg.reply(cm)
-
-@bot.command(name = 'hyp-help')
-async def help(msg: Message):
-    cm = CardMessage
-    c1 = Card(Module.Header('Help Word'), theme=Types.Theme.NONE)
-    c1.append(Module.Context('use "/hyp-about" get about hypixel info'))
-    c1.append(Module.Divider())
-    c1.append(Module.Section('use "/hyp-info" to fast get server info'))
-    c1.append(Module.Section('use "/hyp <name>" to fast get player info'))
-    c1.append(Module.Header('How to use "/hyp-info <type> <name>"'))
-    c1.append(Module.Section('type=server: get hypixel server info(No playername'))
-    c1.append(Module.Section('type=player: to get player hypixel info'))
-    c1.append(Module.Section('type=hypixel game(as skywars): to get that game info(No playername)'))
-    c1.append(Module.Section('type=hypixel game(as skywars): to get that game player info(have playername)[In production]'))
-    cm.append(c1)
-
-    c2 = Card(theme=Types.Theme.NONE) 
-    c2.append(Module.Context('Powered by lolilin(白澪)'))
-    cm.append(c2)  
-    await msg.reply(cm)
-
-
+if msg.ctx.channel.id != "id":
+    return
 ##Hypixel当前信息
-@bot.command(name= 'hyp-info')
+@bot.command(name= 'hyp')
 async def hyp_info(msg: Message, type: str = 'None', playername: str = 'None'):
 
     ##判断需要查询的类型
@@ -114,6 +85,40 @@ async def hyp_info(msg: Message, type: str = 'None', playername: str = 'None'):
         c2.append(Module.Context('Powered by lolilin(白澪)'))
         cm.append(c2)  
         await msg.reply(cm)
+    
+    elif type == 'about':
+        cm = CardMessage()
+        c1 = Card(Module.Header('关于 hypixel Info 机器人'), theme=Types.Theme.NONE)
+        c1.append(Module.Section('这是一个可以查询hypixel信息的机器人'))
+        c1.append(Module.Section(f'版本: {version}'))
+        c1.append(Module.Section('github: https://github.com/lolilin/hypixel-Info-KOOK', Element.Button('link button', 'https://github.com/lolilin/hypixel-Info-KOOK', Types.Click.LINK)))
+        cm.append(c1)
+
+        c2 = Card(theme=Types.Theme.NONE) 
+        c2.append(Module.Context('Powered by lolilin(白澪)'))
+        cm.append(c2)  
+        await msg.reply(cm)
+
+    elif type == 'help' or type == '帮助':
+        cm = CardMessage()
+        c1 = Card(Module.Header('帮助文档'), theme=Types.Theme.NONE)
+        c1.append(Module.Context('使用 "/hyp about" 来获取关于信息'))
+        c1.append(Module.Divider())
+        c1.append(Module.Header('快速命令'))
+        c1.append(Module.Section('使用 "/hyp" 来获取服务器信息'))
+        c1.append(Module.Section('使用 "/hi <玩家名>" 来获取玩家信息'))
+        c1.append(Module.Header('如何使用 "/hyp <类型> <玩家名>"'))
+        c1.append(Module.Section('类型=server 或 服务器: 获取hypixel服务器信息(无须填写玩家名'))
+        c1.append(Module.Section('类型=player 或 玩家: 获取hypixel玩家信息'))
+        c1.append(Module.Section('类型=hyp game(比如 skywars , 空岛战争): 获取指定游戏排行榜及信息(无须填写玩家名)[开发中]'))
+        c1.append(Module.Section('类型=hyp game(比如 skywars , 空岛战争): 获取指定游戏玩家信息(填写玩家名)[开发中]'))
+        c1.append(Module.Section('类型=ban 或 黑名单: 获取hypixel封禁玩家信息[开发中]'))
+        cm.append(c1)
+
+        c2 = Card(theme=Types.Theme.NONE) 
+        c2.append(Module.Context('Powered by lolilin(白澪)'))
+        cm.append(c2)  
+        await msg.reply(cm)
 
 
     elif type == 'player' or type == '玩家':
@@ -123,8 +128,8 @@ async def hyp_info(msg: Message, type: str = 'None', playername: str = 'None'):
         if grammar == False:
 
             cm = CardMessage()
-            c1 = Card(Module.Header(f'"{playername}" is not a correct Minecraft name'), color='#b20000') 
-            c1.append(Module.Section(f'pls "/hyp <playername>" or \n"/hyp-info player <playername>" thx'))
+            c1 = Card(Module.Header(f'"{playername}" 语法错误'), color='#b20000') 
+            c1.append(Module.Section(f'使用 "/hyp 帮助" 来获取帮助'))
             cm.append(c1)
             c2 = Card(theme=Types.Theme.NONE) 
             c2.append(Module.Context('Powered by lolilin(白澪)'))
@@ -168,16 +173,72 @@ async def hyp_info(msg: Message, type: str = 'None', playername: str = 'None'):
                 online = hyp1session.get("online")
 
                 ##时间换算
-                firstlogin = datetime.datetime.fromtimestamp(int(hyp1player.get('firstLogin')/1000))
-                
+                time_local = time.localtime(int(hyp1player.get('firstLogin')/1000))
+                dt = time.strftime("%Y年%m月%d日 %H时%M分%S秒",time_local)
+                firstlogin = dt
+                time_local = time.localtime(int(hyp1player.get('lastLogin')/1000))
+                dt = time.strftime("%Y年%m月%d日 %H时%M分%S秒",time_local)
+                lastlogin = dt
+                time_local = time.localtime(int(hyp1player.get('lastLogout')/1000))
+                dt = time.strftime("%Y年%m月%d日 %H时%M分%S秒",time_local)
+                lastlogout = dt
 
-                lastlogin = datetime.datetime.fromtimestamp(int(hyp1player.get('lastLogin')/1000))
-
-                lastlogout = datetime.datetime.fromtimestamp(int(hyp1player.get('lastLogout')/1000))
 
                 ##在线部分
                 mode = hyp1session.get('mode')
                 gametype = hyp1session.get('gameType')
+
+                if mode == 'LOBBY':
+                    mode = '大厅'
+                elif mode == 'dynamic':
+                    mode = '游戏中'
+                elif mode == 'hub':
+                    mode = '空岛大厅'
+                elif mode == 'PIT':
+                    mode = '天坑乱斗'
+
+
+                if gametype == 'DUELS':
+                    gametype = '决斗游戏'
+                elif gametype == 'BEDWARS':
+                    gametype = '起床战争'
+                elif gametype == 'SKYWARS':
+                    gametype = '空岛战争'
+                elif gametype == 'WOOL_GAMES':
+                    gametype = '羊毛战争'
+                elif gametype == 'SKYBLOCK':
+                    gametype = '空岛生存'
+                elif gametype == 'PROTOTYPE':
+                    gametype = '测试游戏'
+                elif gametype == 'MURDER_MYSTERY':
+                    gametype = '密室杀手'
+                elif gametype == 'HOUSING':
+                    gametype = '家园世界'
+                elif gametype == 'TNTGAMES': 
+                    gametype = '掘战游戏'
+                elif gametype == 'ARCADE':
+                    gametype = '街机游戏'
+                elif gametype == 'BUILD_BATTLE':
+                    gametype = '建筑大师'
+                elif gametype == 'MCGO':
+                    gametype = '警匪大战'
+                elif gametype == 'LEGACY':
+                    gametype = '经典游戏'
+                elif gametype == 'WALLS3':
+                    gametype = '超级战墙'
+                elif gametype == 'PIT':
+                    gametype = '天坑乱斗'
+                elif gametype == 'MAIN':
+                    gametype = '主大厅'
+                elif gametype == 'SUPER_SMASH':
+                    gametype = '星碎英雄'
+                elif gametype == 'BATTLEGROUND':
+                    gametype = '领主战争'
+                elif gametype == 'SURVIVAL_GAMES':
+                    gametype = '闪电饥饿游戏'
+                elif gametype == 'TOURNAMENT':
+                    gametype = '竞赛殿堂'
+                
 
                 ##查询Rank部分
                 hyp1rank = hyp1player.get("rank")
@@ -192,7 +253,14 @@ async def hyp_info(msg: Message, type: str = 'None', playername: str = 'None'):
                     rank = hyp1data["player"]["newPackageRank"]
                 else:
                     rank = None
-            
+
+                if rank == 'SUPERSTAR':
+                    rank = 'MVP++'
+                elif rank == 'MVP_PLUS':
+                    rank = 'MVP+'
+                elif rank == 'VIP_PLUS':
+                    rank = 'VIP+'
+
                 ##查询等级部分
                 exp = hyp1player['networkExp']
                 level = round((hyplv(exp)), 2)
@@ -200,37 +268,42 @@ async def hyp_info(msg: Message, type: str = 'None', playername: str = 'None'):
                 ##回复信息
                 if online == True:
                     ocolor = '#c3dd70'
-                    online = f'{online}'
+                    oonline = f'在线'
                 else:
                     ocolor = '#8d8d8d'
-                    online = f'{online}[{lastlogout}]'
+                    oonline = f'离线[{lastlogout}]'
 
                 cm = CardMessage()
-                c1 = Card(Module.Header(f'{playername} hypixel Info'), color= f'{ocolor}')
+                c1 = Card(Module.Header(f'{playername} 的hypixel信息'), color= f'{ocolor}')
                 c1.append(Module.Context(f'{mcuuid}'))
                 c1.append(Module.Divider())
-                c1.append(Module.Section(f'[{rank}]{name} \nlevel: {level} | karma: {hyp1player["karma"]}' , Element.Image(f'https://crafatar.com/avatars/{mcuuid}?size='), Types.SectionMode.LEFT))
+                if rank == None:
+                    c1.append(Module.Section(f'{playername} \nhypixel等级: {level} | 人品值: {hyp1player["karma"]}' , Element.Image(f'https://crafatar.com/avatars/{mcuuid}?size='), Types.SectionMode.LEFT))
+                else:
+                    c1.append(Module.Section(f'[{rank}]{playername} \nhypixel等级: {level} | 人品值: {hyp1player["karma"]}' , Element.Image(f'https://crafatar.com/avatars/{mcuuid}?size='), Types.SectionMode.LEFT))
                 c1.append(Module.Divider())
-                c1.append(Module.Section(f'online: {online}'))
-                c1.append(Module.Section(f'lastlogin: {lastlogin} | firstlogin{firstlogin}'))
-                c1.append(Module.Section(f'mode: {mode} [{gametype}]'))
+                c1.append(Module.Section(f'状态: {oonline}'))
+                if online == True:
+                    c1.append(Module.Section(f'所在位置: {mode} [{gametype}]'))
+                else:
+                    c1.append(Module.Section(f'最后登陆: {lastlogin}'))
                 cm.append(c1)
 
                 c2 = Card(theme=Types.Theme.NONE) 
                 c2.append(Module.Context('Powered by lolilin(白澪)'))
-                c2.append(c2)  
+                cm.append(c2)  
                 await msg.reply(cm)
 
 ##玩家基本信息(快速)
-@bot.command(name = 'hyp')
+@bot.command(name = 'hi')
 async def player_info(msg: Message, playername: str):
     ##判断玩家语法名
     grammar = is_valid_minecraft_username(f'{playername}')
     if grammar == False:
 
         cm = CardMessage()
-        c1 = Card(Module.Header(f'"{playername}" is not a correct Minecraft name'), color='#b20000') 
-        c1.append(Module.Section(f'pls "/hyp <playername>" or \n"/hyp-info player <playername>" thx'))
+        c1 = Card(Module.Header(f'"{playername}" 语法错误'), color='#b20000') 
+        c1.append(Module.Section(f'使用 "/hyp 帮助" 来获取帮助'))
         cm.append(c1)
         c2 = Card(theme=Types.Theme.NONE) 
         c2.append(Module.Context('Powered by lolilin(白澪)'))
@@ -274,16 +347,72 @@ async def player_info(msg: Message, playername: str):
             online = hyp1session.get("online")
 
             ##时间换算
-            firstlogin = datetime.datetime.fromtimestamp(int(hyp1player.get('firstLogin')/1000))
-            
+            time_local = time.localtime(int(hyp1player.get('firstLogin')/1000))
+            dt = time.strftime("%Y年%m月%d日 %H时%M分%S秒",time_local)
+            firstlogin = dt
+            time_local = time.localtime(int(hyp1player.get('lastLogin')/1000))
+            dt = time.strftime("%Y年%m月%d日 %H时%M分%S秒",time_local)
+            lastlogin = dt
+            time_local = time.localtime(int(hyp1player.get('lastLogout')/1000))
+            dt = time.strftime("%Y年%m月%d日 %H时%M分%S秒",time_local)
+            lastlogout = dt
 
-            lastlogin = datetime.datetime.fromtimestamp(int(hyp1player.get('lastLogin')/1000))
-
-            lastlogout = datetime.datetime.fromtimestamp(int(hyp1player.get('lastLogout')/1000))
 
             ##在线部分
             mode = hyp1session.get('mode')
             gametype = hyp1session.get('gameType')
+
+            if mode == 'LOBBY':
+                mode = '大厅'
+            elif mode == 'dynamic':
+                mode = '游戏中'
+            elif mode == 'hub':
+                mode = '空岛大厅'
+            elif mode == 'PIT':
+                mode = '天坑乱斗'
+
+
+            if gametype == 'DUELS':
+                gametype = '决斗游戏'
+            elif gametype == 'BEDWARS':
+                gametype = '起床战争'
+            elif gametype == 'SKYWARS':
+                gametype = '空岛战争'
+            elif gametype == 'WOOL_GAMES':
+                gametype = '羊毛战争'
+            elif gametype == 'SKYBLOCK':
+                gametype = '空岛生存'
+            elif gametype == 'PROTOTYPE':
+                gametype = '测试游戏'
+            elif gametype == 'MURDER_MYSTERY':
+                gametype = '密室杀手'
+            elif gametype == 'HOUSING':
+                gametype = '家园世界'
+            elif gametype == 'TNTGAMES': 
+                gametype = '掘战游戏'
+            elif gametype == 'ARCADE':
+                gametype = '街机游戏'
+            elif gametype == 'BUILD_BATTLE':
+                gametype = '建筑大师'
+            elif gametype == 'MCGO':
+                gametype = '警匪大战'
+            elif gametype == 'LEGACY':
+                gametype = '经典游戏'
+            elif gametype == 'WALLS3':
+                gametype = '超级战墙'
+            elif gametype == 'PIT':
+                gametype = '天坑乱斗'
+            elif gametype == 'MAIN':
+                gametype = '主大厅'
+            elif gametype == 'SUPER_SMASH':
+                gametype = '星碎英雄'
+            elif gametype == 'BATTLEGROUND':
+                gametype = '领主战争'
+            elif gametype == 'SURVIVAL_GAMES':
+                gametype = '闪电饥饿游戏'
+            elif gametype == 'TOURNAMENT':
+                gametype = '竞赛殿堂'
+            
 
             ##查询Rank部分
             hyp1rank = hyp1player.get("rank")
@@ -298,7 +427,14 @@ async def player_info(msg: Message, playername: str):
                 rank = hyp1data["player"]["newPackageRank"]
             else:
                 rank = None
-        
+
+            if rank == 'SUPERSTAR':
+                rank = 'MVP++'
+            elif rank == 'MVP_PLUS':
+                rank = 'MVP+'
+            elif rank == 'VIP_PLUS':
+                rank = 'VIP+'
+
             ##查询等级部分
             exp = hyp1player['networkExp']
             level = round((hyplv(exp)), 2)
@@ -306,26 +442,32 @@ async def player_info(msg: Message, playername: str):
             ##回复信息
             if online == True:
                 ocolor = '#c3dd70'
-                online = f'{online}'
+                oonline = f'在线'
             else:
                 ocolor = '#8d8d8d'
-                online = f'{online}[{lastlogout}]'
+                oonline = f'离线[{lastlogout}]'
 
             cm = CardMessage()
-            c1 = Card(Module.Header(f'{playername} hypixel Info'), color= f'{ocolor}')
+            c1 = Card(Module.Header(f'{playername} 的hypixel信息'), color= f'{ocolor}')
             c1.append(Module.Context(f'{mcuuid}'))
             c1.append(Module.Divider())
-            c1.append(Module.Section(f'[{rank}]{name} \nlevel: {level} | karma: {hyp1player["karma"]}' , Element.Image(f'https://crafatar.com/avatars/{mcuuid}?size='), Types.SectionMode.LEFT))
+            if rank == None:
+                c1.append(Module.Section(f'{playername} \nhypixel等级: {level} | 人品值: {hyp1player["karma"]}' , Element.Image(f'https://crafatar.com/avatars/{mcuuid}?size='), Types.SectionMode.LEFT))
+            else:
+                c1.append(Module.Section(f'[{rank}]{playername} \nhypixel等级: {level} | 人品值: {hyp1player["karma"]}' , Element.Image(f'https://crafatar.com/avatars/{mcuuid}?size='), Types.SectionMode.LEFT))
             c1.append(Module.Divider())
-            c1.append(Module.Section(f'online: {online}'))
-            c1.append(Module.Section(f'lastlogin: {lastlogin} | firstlogin{firstlogin}'))
-            c1.append(Module.Section(f'mode: {mode} [{gametype}]'))
+            c1.append(Module.Section(f'状态: {oonline}'))
+            if online == True:
+                c1.append(Module.Section(f'所在位置: {mode} [{gametype}]'))
+            else:
+                c1.append(Module.Section(f'最后登陆: {lastlogin}'))
             cm.append(c1)
 
             c2 = Card(theme=Types.Theme.NONE) 
             c2.append(Module.Context('Powered by lolilin(白澪)'))
-            c2.append(c2)  
+            cm.append(c2)  
             await msg.reply(cm)
+
 
 
 
